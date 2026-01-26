@@ -5,6 +5,16 @@ The application allows users to search for a city and view real-time weather inf
 
 ---
 
+## Demo
+
+### Weather Dashboard
+![Weather Dashboard](assets/dashboard.png)
+
+### 5-Day Temperature Forecast
+![5-Day Forecast](assets/forecast_chart.png)
+
+---
+
 ## Features
 - Search weather details by city name
 - Displays current temperature, humidity, and weather conditions
