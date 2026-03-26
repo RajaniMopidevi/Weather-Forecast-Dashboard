@@ -1,7 +1,8 @@
 # Weather Forecast Dashboard
 
-A Python-based weather forecast dashboard built using **Streamlit** and the **OpenWeatherMap API**.  
-The application allows users to search for a city and view real-time weather information in an interactive dashboard format.
+A real-time weather application built using **Streamlit** and the **OpenWeatherMap** API that enables users to search for any city and view current weather conditions through an interactive dashboard.
+
+The application fetches live weather data and presents key metrics such as temperature, humidity, and conditions in a structured and user-friendly format, allowing quick and efficient access to weather insights.
 
 ---
 
@@ -17,10 +18,10 @@ The application allows users to search for a city and view real-time weather inf
 
 ## Features
 - Search weather details by city name
-- Displays current temperature, humidity, and weather conditions
-- Real-time data fetched using OpenWeatherMap API
-- Simple and interactive UI built with Streamlit
-
+- Real-time weather data retrieval using API
+- Displays temperature, humidity, and weather conditions
+- Interactive dashboard built with Streamlit
+- Data processing and visualization for better readability
 ---
 
 ## Tech Stack
@@ -55,10 +56,21 @@ The application allows users to search for a city and view real-time weather inf
 - **OpenWeatherMap API**
 https://openweathermap.org/api
 
+Provides real-time weather data including temperature, humidity, and forecast information via REST API.
+
 ---
 
+## Project Structure
+```bash
+app.py           → Main Streamlit application (UI + API integration)
+requirements.txt → Project dependencies
+assets/          → Screenshots for README demo
+README.md        → Project documentation
+```
+
 ## Future Improvements
-- Add 5-day weather forecast
-- Improve UI with charts and icons
-- Handle invalid city inputs gracefully
+- Add extended (5–7 day) weather forecast
+- Improve UI with enhanced charts and icons
+- Implement error handling for invalid inputs
+- Add location-based auto-detection
 
