@@ -3,9 +3,17 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-st.title("Weather Forecast Dashboard")
-st.caption("Real-time & forecast weather dashboard using OpenWeather API")
+# 🌈 Bright background
+st.markdown("""
+<style>
+.stApp {
+    background: linear-gradient(135deg, #2b5876, #4e4376);
+}
+</style>
+""", unsafe_allow_html=True)
 
+st.title("🌦 Weather Forecast Dashboard")
+st.caption("Real-time & forecast weather dashboard using OpenWeather API")
 
 API_KEY = "a142f5b410c4de1723204d01be94a523"
 
@@ -16,72 +24,99 @@ if st.button("Get Weather"):
         st.warning("Please enter a city name")
     else:
         url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
-        response = requests.get(url)
-        data = response.json()
+        
+        with st.spinner("Fetching weather..."):
+            response = requests.get(url)
+            data = response.json()
 
         if data.get("cod") != 200:
             st.error(data.get("message"))
         else:
-            st.subheader(f"Weather in {data['name']}")
-            col1, col2 = st.columns([1, 2],gap = "small")
+            st.subheader(f"📍 Weather in {data['name']}")
 
-            
-            st.metric("Temperature (°C)", data["main"]["temp"])
-            st.metric("Humidity (%)", data["main"]["humidity"])
-            st.metric("Wind Speed (m/s)", data["wind"]["speed"])
+            # 🌈 COLORFUL CARDS
+            col1, col2, col3 = st.columns(3)
 
+            with col1:
+                st.markdown(f"""
+                <div style="
+                background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+                padding:20px;
+                border-radius:15px;
+                text-align:center;
+                color:black;">
+                🌡<br><b>Temperature</b>
+                <h2>{data['main']['temp']}°C</h2>
+                </div>
+                """, unsafe_allow_html=True)
 
-            st.write("**Weather Description:**", data["weather"][0]["description"].capitalize())
+            with col2:
+                st.markdown(f"""
+                <div style="
+                background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+                padding:20px;
+                border-radius:15px;
+                text-align:center;
+                color:black;">
+                💧<br><b>Humidity</b>
+                <h2>{data['main']['humidity']}%</h2>
+                </div>
+                """, unsafe_allow_html=True)
 
+            with col3:
+                st.markdown(f"""
+                <div style="
+                background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+                padding:20px;
+                border-radius:15px;
+                text-align:center;
+                color:black;">
+                🌬<br><b>Wind</b>
+                <h2>{data['wind']['speed']} m/s</h2>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # ☁ Weather description box
+            st.markdown(f"""
+            <div style="
+            background:white;
+            padding:15px;
+            border-radius:12px;
+            margin-top:20px;
+            text-align:center;
+            color:black;
+            font-weight:500;">
+            ☁ {data["weather"][0]["description"].capitalize()}
+            </div>
+            """, unsafe_allow_html=True)
+
+            # 🕒 Date time
             dt = datetime.fromtimestamp(data["dt"])
-            st.caption(f"Data&Time: {dt}")
-            
-            lat = data["coord"]["lat"]
-            lon = data["coord"]["lon"]
+            st.caption(f"📅 {dt.strftime('%d %B %Y, %I:%M %p')}")
 
-
-            forecast_url = (
-                f"https://api.openweathermap.org/data/2.5/forecast?"
-                f"q={city}&appid={API_KEY}&units=metric"
-            )
-
+            # 📊 FORECAST
+            forecast_url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units=metric"
             forecast_response = requests.get(forecast_url)
             forecast_data = forecast_response.json()
 
             if "list" not in forecast_data:
                 st.error("Forecast data not available")
             else:
-                st.success("Forecast data fetched successfully")
-                    
-
-            
                 dates = []
                 temps = []
 
                 for item in forecast_data["list"]:
-                        date = datetime.fromtimestamp(item["dt"]).date()
-                        dates.append(date)
-                        temps.append(item["main"]["temp"])
+                    date = datetime.fromtimestamp(item["dt"]).date()
+                    dates.append(date)
+                    temps.append(item["main"]["temp"])
 
                 df = pd.DataFrame({
-                        "Date": dates,
-                        "Temperature (°C)": temps
-                    })
-
+                    "Date": dates,
+                    "Temperature (°C)": temps
+                })
 
                 daily_df = df.groupby("Date", as_index=True).mean()
                 daily_df.index = pd.to_datetime(daily_df.index).strftime("%b %d")
-                
 
-                st.subheader("Daily Average Temperature (Next 5 Days)")
-                st.line_chart(daily_df)
-
-
-
-
-
-
-            
-
-
-
+                st.subheader("📈 5-Day Temperature Forecast")
+                st.line_chart(daily_df, use_container_width=True)
